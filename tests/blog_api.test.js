@@ -30,12 +30,12 @@ describe('api baisc test', async () => {
   });
 
   test('create blog', async () => {
-    const newBlog = Blog({
+    const newBlog = {
       title: 'lol',
       author: 'abc',
       url: 'http://google.com',
       likes: 5,
-    });
+    };
 
     const oldResult = await api.get('/api/blogs');
 
@@ -55,7 +55,7 @@ describe('api baisc test', async () => {
     assert(firstBlog.id !== undefined);
   });
 
-  test('test when missing likes, default value should be zero', async() => {
+  test('test when missing likes, default value should be zero', async () => {
     const newBlog = {
       title: 'lol',
       author: 'abc',
@@ -63,6 +63,20 @@ describe('api baisc test', async () => {
     };
     const result = await api.post('/api/blogs').send(newBlog).expect(201);
     assert(result.body.likes === 0);
+  });
+
+  test('test when required items are missing', async () => {
+    const newBlog = {
+      author: 'abc',
+      url: 'http://google.com',
+    };
+    await api.post('/api/blogs').send(newBlog).expect(400);
+
+    const newBlogMissingAuthor = {
+      title: 'lol',
+      url: 'http://google.com',
+    };
+    await api.post('/api/blogs').send(newBlogMissingAuthor).expect(400);
   });
 
   after(async () => {
