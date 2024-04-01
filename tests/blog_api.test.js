@@ -17,7 +17,7 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs);
 });
 
-describe('blogs test', async () => {
+describe('api baisc test', async () => {
   test('blogs are returned as json', async () => {
     await api.get('/api/blogs')
       .expect(200)
@@ -47,6 +47,18 @@ describe('blogs test', async () => {
 
     // length verify
     assert(contents.length, oldResult + 1);
+  });
+
+  after(async () => {
+    await mongoose.connection.close();
+  });
+});
+
+describe('specific tests', async () => {
+  test('blog contains item named id', async () => {
+    const result = await api.get('/api/blogs');
+    const firstBlog = result.body[0].toJSON();
+    assert(firstBlog.id !== undefined);
   });
 
   after(async () => {
