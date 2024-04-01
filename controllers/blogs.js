@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
 
@@ -21,6 +22,16 @@ blogRouter.post('/', async (request, response) => {
 blogRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndDelete(request.params.id);
   response.status(204).end();
+});
+
+blogRouter.put('/:id', async (request, response) => {
+  const body = request.body;
+  const blog = {
+    title: body.title,
+  };
+
+  const updateBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
+  response.json(updateBlog);
 });
 
 module.exports = blogRouter;

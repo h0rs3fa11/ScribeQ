@@ -96,6 +96,24 @@ describe('api basic test', () => {
     });
   });
 
+  describe('update of a blog', () => {
+    test('update title', async () => {
+      const blogs = await helper.bloginDB();
+      const blogToDelete = blogs[0];
+
+      const updateBlog = {
+        ...blogToDelete,
+        title: 'new title for this blog',
+      };
+
+      await api.put(`/api/blogs/${blogToDelete.id}`).send(updateBlog).expect(200);
+
+      const newBlogs = await helper.bloginDB();
+      const titles = newBlogs.map((blog) => blog.title);
+      assert(titles.includes('new title for this blog'));
+    });
+  });
+
   after(async () => {
     await mongoose.connection.close();
   });
