@@ -29,6 +29,26 @@ describe('blogs test', async () => {
     assert(response.body.length, helper.initialBlogs.length);
   });
 
+  test('create blog', async () => {
+    const newBlog = Blog({
+      title: 'lol',
+      author: 'abc',
+      url: 'http://google.com',
+      likes: 5,
+    });
+
+    const oldResult = await api.get('/api/blogs');
+
+    await api.post('/api/blogs/').send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+
+    // include the new blog
+    const newResult = await api.get('/api/blogs');
+    const contents = newResult.body.map((result) => result.content);
+
+    // length verify
+    assert(contents.length, oldResult + 1);
+  });
+
   after(async () => {
     await mongoose.connection.close();
   });
