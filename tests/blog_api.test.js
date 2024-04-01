@@ -49,16 +49,20 @@ describe('api baisc test', async () => {
     assert(contents.length, oldResult + 1);
   });
 
-  after(async () => {
-    await mongoose.connection.close();
-  });
-});
-
-describe('specific tests', async () => {
   test('blog contains item named id', async () => {
     const result = await api.get('/api/blogs');
-    const firstBlog = result.body[0].toJSON();
+    const firstBlog = result.body[0];
     assert(firstBlog.id !== undefined);
+  });
+
+  test('test when missing likes, default value should be zero', async() => {
+    const newBlog = {
+      title: 'lol',
+      author: 'abc',
+      url: 'http://google.com',
+    };
+    const result = await api.post('/api/blogs').send(newBlog).expect(201);
+    assert(result.body.likes === 0);
   });
 
   after(async () => {
