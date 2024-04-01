@@ -17,7 +17,7 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs);
 });
 
-describe('api baisc test', async () => {
+describe('api basic test', () => {
   test('blogs are returned as json', async () => {
     await api.get('/api/blogs')
       .expect(200)
@@ -29,54 +29,71 @@ describe('api baisc test', async () => {
     assert(response.body.length, helper.initialBlogs.length);
   });
 
-  test('create blog', async () => {
-    const newBlog = {
-      title: 'lol',
-      author: 'abc',
-      url: 'http://google.com',
-      likes: 5,
-    };
-
-    const oldResult = await api.get('/api/blogs');
-
-    await api.post('/api/blogs/').send(newBlog).expect(201).expect('Content-Type', /application\/json/);
-
-    // include the new blog
-    const newResult = await api.get('/api/blogs');
-    const contents = newResult.body.map((result) => result.content);
-
-    // length verify
-    assert(contents.length, oldResult + 1);
-  });
-
   test('blog contains item named id', async () => {
     const result = await api.get('/api/blogs');
     const firstBlog = result.body[0];
     assert(firstBlog.id !== undefined);
   });
 
-  test('test when missing likes, default value should be zero', async () => {
-    const newBlog = {
-      title: 'lol',
-      author: 'abc',
-      url: 'http://google.com',
-    };
-    const result = await api.post('/api/blogs').send(newBlog).expect(201);
-    assert(result.body.likes === 0);
+  describe('create blog', () => {
+    test('create blog', async () => {
+      const newBlog = {
+        title: 'lol',
+        author: 'abc',
+        url: 'http://google.com',
+        likes: 5,
+      };
+
+      const oldResult = await api.get('/api/blogs');
+
+      await api.post('/api/blogs/').send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+
+      // include the new blog
+      const newResult = await api.get('/api/blogs');
+      const contents = newResult.body.map((result) => result.content);
+
+      // length verify
+      assert(contents.length, oldResult + 1);
+    });
+
+    test('test when missing likes, default value should be zero', async () => {
+      const newBlog = {
+        title: 'lol',
+        author: 'abc',
+        url: 'http://google.com',
+      };
+      const result = await api.post('/api/blogs').send(newBlog).expect(201);
+      assert(result.body.likes === 0);
+    });
+
+    test('test when required items are missing', async () => {
+      const newBlog = {
+        author: 'abc',
+        url: 'http://google.com',
+      };
+      await api.post('/api/blogs').send(newBlog).expect(400);
+
+      const newBlogMissingAuthor = {
+        title: 'lol',
+        url: 'http://google.com',
+      };
+      await api.post('/api/blogs').send(newBlogMissingAuthor).expect(400);
+    });
   });
 
-  test('test when required items are missing', async () => {
-    const newBlog = {
-      author: 'abc',
-      url: 'http://google.com',
-    };
-    await api.post('/api/blogs').send(newBlog).expect(400);
+  describe('deletion of a blog', () => {
+    test('delete one blog', async () => {
+      const blogs = await helper.bloginDB();
+      const blogToDelete = blogs[0];
 
-    const newBlogMissingAuthor = {
-      title: 'lol',
-      url: 'http://google.com',
-    };
-    await api.post('/api/blogs').send(newBlogMissingAuthor).expect(400);
+      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+      const blogAfter = await helper.bloginDB();
+      assert.strictEqual(blogAfter.length, helper.initialBlogs.length - 1);
+
+      const titles = blogAfter.map((blog) => blog.title);
+      assert(!titles.includes(blogToDelete.title));
+    });
   });
 
   after(async () => {
