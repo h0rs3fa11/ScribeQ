@@ -35,7 +35,7 @@ describe('when there is a initial user', () => {
 
     const newUser = {
       username: 'mxuas',
-      password: '1234',
+      password: '12345678',
     };
 
     await api.post('/api/users').send(newUser).expect(201).expect('Content-Type', /application\/json/);
@@ -52,7 +52,7 @@ describe('when there is a initial user', () => {
     const userAtStart = await helper.userInDB();
     const existUser = {
       username: 'root',
-      password: '12345',
+      password: '12345678',
     };
 
     const result = await api.post('/api/users').send(existUser).expect(400).expect('Content-Type', /application\/json/);
@@ -60,6 +60,33 @@ describe('when there is a initial user', () => {
     const userAtEnd = await helper.userInDB();
     assert.strictEqual(userAtStart.length, userAtEnd.length);
     assert(result.body.error.includes('expected `username` to be unique'));
+  });
+
+  test('creation a user with password length less than 8 should fail', async() => {
+    const userAtStart = await helper.userInDB();
+    const existUser = {
+      username: 'suka',
+      password: '1234',
+    };
+
+    const result = await api.post('/api/users').send(existUser).expect(400).expect('Content-Type', /application\/json/);
+
+    const userAtEnd = await helper.userInDB();
+    assert.strictEqual(userAtStart.length, userAtEnd.length);
+    assert(result.body.error.includes('password is invalid'));
+  });
+
+  test('creation a user with username length less than 3 characters should fail', async () => {
+    const userAtStart = await helper.userInDB();
+    const existUser = {
+      username: 'su',
+      password: '12345678',
+    };
+
+    await api.post('/api/users').send(existUser).expect(400).expect('Content-Type', /application\/json/);
+
+    const userAtEnd = await helper.userInDB();
+    assert.strictEqual(userAtStart.length, userAtEnd.length);
   });
 
   after(async () => { await mongoose.connection.close(); });
