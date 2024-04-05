@@ -3,8 +3,6 @@
 /* eslint-disable prefer-destructuring */
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
-const User = require('../models/user');
-const jwt = require('jsonwebtoken');
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('author', { username: 1, name: 1, id: 1 });
@@ -12,20 +10,15 @@ blogRouter.get('/', async (request, response) => {
 });
 
 blogRouter.post('/', async (request, response) => {
-  const decodeToken = jwt.verify(request.token, process.env.SECRET);
-  if (!decodeToken.id) {
-    return response.status(401).json({ error: 'token invalid' });
-  }
+  const user = request.user;
 
-  const user = await User.findById(decodeToken.id);
-
-  if (user === null) {
-    return response.status(401).json({ error: 'user doesn not exist' });
+  if (user === undefined) {
+    response.status(401).json({ error: 'no authorization' });
   }
 
   const newBlog = Blog({
     title: request.body.title,
-    author: user._id,
+    author: user.id,
     url: request.body.url,
     likes: request.body.likes || 0,
   });
@@ -38,9 +31,10 @@ blogRouter.post('/', async (request, response) => {
 });
 
 blogRouter.delete('/:id', async (request, response) => {
-  const decodeToken = jwt.verify(request.token, process.env.SECRET);
-  if (!decodeToken.id) {
-    return response.status(401).json({ error: 'token invalid' });
+  const user = request.user;
+
+  if (user === undefined) {
+    response.status(401).json({ error: 'no authorization' });
   }
 
   const blogToDelete = await Blog.findById(request.params.id);
@@ -49,7 +43,7 @@ blogRouter.delete('/:id', async (request, response) => {
     return response.status(401).json({ error: 'token invalid' });
   }
 
-  if (blogToDelete.author.toString() !== decodeToken.id) {
+  if (blogToDelete.author.toString() !== user.id) {
     return response.status(401).json({ error: 'token invalid' });
   }
 
