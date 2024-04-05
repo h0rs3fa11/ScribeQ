@@ -18,7 +18,10 @@ blogRouter.post('/', async (request, response) => {
   }
 
   const user = await User.findById(decodeToken.id);
-  // const usersJSON = await users.map((user) => user.toJSON());
+
+  if (user === null) {
+    return response.status(401).json({ error: 'user doesn not exist' });
+  }
 
   const newBlog = Blog({
     title: request.body.title,
@@ -31,12 +34,28 @@ blogRouter.post('/', async (request, response) => {
   user.blogs = user.blogs.concat(newBlog._id);
   await user.save();
 
-  response.status(201).json(result);
+  return response.status(201).json(result);
 });
 
 blogRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id);
-  response.status(204).end();
+  const decodeToken = jwt.verify(request.token, process.env.SECRET);
+  if (!decodeToken.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
+  const blogToDelete = await Blog.findById(request.params.id);
+
+  if (blogToDelete === null) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
+  if (blogToDelete.author.toString() !== decodeToken.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
+  await blogToDelete.deleteOne();
+  // await Blog.findByIdAndDelete(request.params.id);
+  return response.status(204).end();
 });
 
 blogRouter.put('/:id', async (request, response) => {

@@ -4,7 +4,6 @@
 const {
   test, describe, after, beforeEach,
 } = require('node:test');
-const bcrypt = require('bcrypt');
 const assert = require('node:assert');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
@@ -20,14 +19,14 @@ beforeEach(async () => {
   await Blog.deleteMany({});
   await User.deleteMany({});
 
-  const passwordHash = await bcrypt.hash('asdfas', 10);
+  const initUsers = await helper.createInitUsers();
+  const userObj = initUsers.map((user) => new User(user));
+  const promiseArray = userObj.map((user) => user.save());
 
-  const initUser = new User({
-    username: 'init1',
-    passwordHash,
-  });
+  await Promise.all(promiseArray);
 
-  await initUser.save();
+  const users = await helper.userInDB();
+  const initUser = users.filter((user) => user.username === 'init1');
 
   helper.initialBlogs.forEach((blog) => {
     blog.author = initUser._id;
@@ -54,7 +53,7 @@ describe('api basic test', () => {
     assert(firstBlog.id !== undefined);
   });
 
-  describe('create blog without authentication', () => {
+  describe('create blog', () => {
     test('create blog', async () => {
       const newBlog = {
         title: 'lol',
@@ -69,7 +68,7 @@ describe('api basic test', () => {
       // login
       const user = {
         username: 'init1',
-        password: 'asdfas',
+        password: 'asdfasasd',
       };
 
       const loginInfo = await api.post('/api/login').send(user).expect(200);
@@ -96,7 +95,7 @@ describe('api basic test', () => {
       // login
       const user = {
         username: 'init1',
-        password: 'asdfas',
+        password: 'asdfasasd',
       };
 
       const loginInfo = await api.post('/api/login').send(user).expect(200);
@@ -116,7 +115,7 @@ describe('api basic test', () => {
       // login
       const user = {
         username: 'init1',
-        password: 'asdfas',
+        password: 'asdfasasd',
       };
 
       const loginInfo = await api.post('/api/login').send(user).expect(200);
@@ -131,20 +130,85 @@ describe('api basic test', () => {
     });
   });
 
-  // describe('deletion of a blog', () => {
-  //   test('delete one blog', async () => {
-  //     const blogs = await helper.bloginDB();
-  //     const blogToDelete = blogs[0];
+  describe('deletion of a blog', () => {
+    test('delete one blog with authorization', async () => {
+      // login
+      const user = {
+        username: 'init1',
+        password: 'asdfasasd',
+      };
 
-  //     await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+      const loginInfo = await api.post('/api/login').send(user).expect(200);
+      const { token, id } = loginInfo.body;
+      const newBlog = {
+        title: 'lol',
+        url: 'http://google.com',
+        likes: 5,
+      };
 
-  //     const blogAfter = await helper.bloginDB();
-  //     assert.strictEqual(blogAfter.length, helper.initialBlogs.length - 1);
+      await api.post('/api/blogs/').set('Authorization', `Bearer ${token}`).send(newBlog).expect(201);
 
-  //     const titles = blogAfter.map((blog) => blog.title);
-  //     assert(!titles.includes(blogToDelete.title));
-  //   });
-  // });
+      const userInfo = await helper.getUserById(id);
+
+      assert(userInfo.blogs.length);
+
+      const blogBefore = await helper.bloginDB();
+
+      const blogToDelete = userInfo.blogs[0].toString();
+
+      await api.delete(`/api/blogs/${blogToDelete}`).set('Authorization', `Bearer ${token}`).expect(204);
+
+      const blogAfter = await helper.bloginDB();
+      assert.strictEqual(blogAfter.length, blogBefore.length - 1);
+
+      const blogDeleted = await Blog.findById(blogToDelete);
+      assert(blogDeleted === null);
+    });
+
+    test('delete one blog with a wrong user', async () => {
+      // login with another user
+      const user = {
+        username: 'init1',
+        password: 'asdfasasd',
+      };
+
+      const user2 = {
+        username: 'init2',
+        password: 'sfasdasd',
+      };
+
+      const loginInfo = await api.post('/api/login').send(user).expect(200);
+      const { token, id } = loginInfo.body;
+
+      const loginInfoUser2 = await api.post('/api/login').send(user2).expect(200);
+      const token2 = loginInfoUser2.body.token;
+
+      const newBlog = {
+        title: 'lol',
+        url: 'http://google.com',
+        likes: 5,
+      };
+      // create a blog with init1
+      await api.post('/api/blogs/').set('Authorization', `Bearer ${token}`).send(newBlog).expect(201);
+
+      const userInfo = await helper.getUserById(id);
+
+      assert(userInfo.blogs.length);
+
+      const blogBefore = await helper.bloginDB();
+
+      const blogToDelete = userInfo.blogs[0].toString();
+
+      // delete the blog with init2
+      await api.delete(`/api/blogs/${blogToDelete}`).set('Authorization', `Bearer ${token2}`).expect(401);
+
+      const blogAfter = await helper.bloginDB();
+      assert.strictEqual(blogAfter.length, blogBefore.length);
+
+      const blogDeleted = await Blog.findById(blogToDelete);
+      assert(blogDeleted !== null);
+    });
+  });
 
   // describe('update of a blog', () => {
   //   test('update title', async () => {
