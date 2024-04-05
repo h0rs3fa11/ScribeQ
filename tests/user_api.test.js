@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const {
   test, describe, after, beforeEach,
 } = require('node:test');
@@ -62,7 +63,7 @@ describe('when there is a initial user', () => {
     assert(result.body.error.includes('expected `username` to be unique'));
   });
 
-  test('creation a user with password length less than 8 should fail', async() => {
+  test('creation a user with password length less than 8 should fail', async () => {
     const userAtStart = await helper.userInDB();
     const existUser = {
       username: 'suka',
@@ -87,6 +88,24 @@ describe('when there is a initial user', () => {
 
     const userAtEnd = await helper.userInDB();
     assert.strictEqual(userAtStart.length, userAtEnd.length);
+  });
+
+  test('login success with correct username and password', async () => {
+    const userLogin = {
+      username: 'root',
+      password: 'asdfas',
+    };
+
+    await api.post('/api/login').send(userLogin).expect(200).expect('Content-Type', /application\/json/);
+  });
+
+  test('login failed with incorrect username and password', async () => {
+    const userLogin = {
+      username: 'root',
+      password: '12345',
+    };
+
+    await api.post('/api/login').send(userLogin).expect(401);
   });
 
   after(async () => { await mongoose.connection.close(); });

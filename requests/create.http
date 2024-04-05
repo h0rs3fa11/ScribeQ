@@ -1,7 +1,8 @@
 POST http://localhost:3001/api/blogs/ HTTP/1.1
 Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY2MGViYTkwMzc5M2U4YTkzZDc0Y2UwMyIsImlhdCI6MTcxMjI0MTYyMX0.Cjlnp0bPQnG6qbho2ZjKV--e49AO1GT9Nf7ca87KJlU
 
 {
-    "title" : "testtitle",
+    "title" : "new blog from root",
     "url": "111"
 }

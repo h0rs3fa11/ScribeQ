@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
