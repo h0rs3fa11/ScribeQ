@@ -208,25 +208,215 @@ describe('api basic test', () => {
       const blogDeleted = await Blog.findById(blogToDelete);
       assert(blogDeleted !== null);
     });
+
+    test('delete non-exist blog', async () => {
+          // login
+          const user = {
+            username: 'init1',
+            password: 'asdfasasd',
+          };
+
+          const loginInfo = await api.post('/api/login').send(user).expect(200);
+
+          const { token, id } = loginInfo.body;
+          const newBlog = {
+            title: 'lol',
+            url: 'http://google.com',
+            likes: 5,
+          };
+
+          const blog = await api.post('/api/blogs/')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newBlog)
+            .expect(201);
+
+          const userInfo = await helper.getUserById(id);
+
+          assert(userInfo.blogs.length);
+
+          await api.delete(`/api/blogs/${blog.body.id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .expect(204);
+
+          // ensure it's been deleted
+          const deletedBlog = await helper.getBlogById(blog.body.id);
+
+          assert(deletedBlog === null);
+
+          await api.delete(`/api/blogs/${blog.body.id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .expect(404);
+        });
   });
 
-  // describe('update of a blog', () => {
-  //   test('update title', async () => {
-  //     const blogs = await helper.bloginDB();
-  //     const blogToDelete = blogs[0];
+  describe('update of a blog', () => {
+    test('update title with auth should be success', async () => {
+      // login
+      const user = {
+        username: 'init1',
+        password: 'asdfasasd',
+      };
 
-  //     const updateBlog = {
-  //       ...blogToDelete,
-  //       title: 'new title for this blog',
-  //     };
+      const loginInfo = await api.post('/api/login').send(user).expect(200);
+      const { token, id } = loginInfo.body;
+      const newBlog = {
+        title: 'lol',
+        url: 'http://google.com',
+        likes: 5,
+      };
 
-  //     await api.put(`/api/blogs/${blogToDelete.id}`).send(updateBlog).expect(200);
+      const blog = await api.post('/api/blogs/')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+        .expect(201);
 
-  //     const newBlogs = await helper.bloginDB();
-  //     const titles = newBlogs.map((blog) => blog.title);
-  //     assert(titles.includes('new title for this blog'));
-  //   });
-  // });
+      const userInfo = await helper.getUserById(id);
+
+      assert(userInfo.blogs.length);
+
+      const newBlogInfo = {
+        title: 'updated',
+      };
+
+      await api.put(`/api/blogs/${blog.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlogInfo)
+        .expect(200);
+
+      const blogAfter = await helper.getBlogById(blog.body.id);
+      assert.strictEqual(blogAfter.title, newBlogInfo.title);
+    });
+
+    test('update title with wrong auth should be failed', async () => {
+      // login
+      const user = {
+        username: 'init1',
+        password: 'asdfasasd',
+      };
+
+      const user2 = {
+        username: 'init2',
+        password: 'sfasdasd',
+      };
+
+      const loginInfo = await api.post('/api/login').send(user).expect(200);
+      const loginInfo2 = await api.post('/api/login').send(user2).expect(200);
+      const tokenWrong = loginInfo2.body.token;
+
+      const { token, id } = loginInfo.body;
+      const newBlog = {
+        title: 'lol',
+        url: 'http://google.com',
+        likes: 5,
+      };
+
+      const blog = await api.post('/api/blogs/')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+        .expect(201);
+
+      const blogBefore = await helper.getBlogById(blog.body.id);
+
+      const userInfo = await helper.getUserById(id);
+
+      assert(userInfo.blogs.length);
+
+      const newBlogInfo = {
+        title: 'updated',
+      };
+
+      await api.put(`/api/blogs/${blog.body.id}`)
+        .set('Authorization', `Bearer ${tokenWrong}`)
+        .send(newBlogInfo)
+        .expect(401);
+
+      const blogAfter = await helper.getBlogById(blog.body.id);
+      assert.strictEqual(blogAfter.title, blogBefore.title);
+    });
+
+    test('update title without auth should be failed', async () => {
+      // login
+      const user = {
+        username: 'init1',
+        password: 'asdfasasd',
+      };
+
+      const loginInfo = await api.post('/api/login').send(user).expect(200);
+
+      const { token, id } = loginInfo.body;
+      const newBlog = {
+        title: 'lol',
+        url: 'http://google.com',
+        likes: 5,
+      };
+
+      const blog = await api.post('/api/blogs/')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+        .expect(201);
+
+      const blogBefore = await helper.getBlogById(blog.body.id);
+
+      const userInfo = await helper.getUserById(id);
+
+      assert(userInfo.blogs.length);
+
+      const newBlogInfo = {
+        title: 'updated',
+      };
+
+      await api.put(`/api/blogs/${blog.body.id}`)
+        .send(newBlogInfo)
+        .expect(401);
+
+      const blogAfter = await helper.getBlogById(blog.body.id);
+      assert.strictEqual(blogAfter.title, blogBefore.title);
+    });
+
+    test('update a non-exist blog', async () => {
+      // login
+      const user = {
+        username: 'init1',
+        password: 'asdfasasd',
+      };
+
+      const loginInfo = await api.post('/api/login').send(user).expect(200);
+
+      const { token, id } = loginInfo.body;
+      const newBlog = {
+        title: 'lol',
+        url: 'http://google.com',
+        likes: 5,
+      };
+
+      const blog = await api.post('/api/blogs/')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+        .expect(201);
+
+      const userInfo = await helper.getUserById(id);
+
+      assert(userInfo.blogs.length);
+
+      await api.delete(`/api/blogs/${blog.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(204);
+
+      // ensure it's been deleted
+      const deletedBlog = await helper.getBlogById(blog.body.id);
+
+      assert(deletedBlog === null);
+
+      const newBlogInfo = {
+        title: 'somethingupdated',
+      };
+
+      await api.put(`/api/blogs/${blog.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlogInfo)
+        .expect(404);
+    });
+  });
 
   after(async () => {
     await mongoose.connection.close();

@@ -40,7 +40,7 @@ blogRouter.delete('/:id', async (request, response) => {
   const blogToDelete = await Blog.findById(request.params.id);
 
   if (blogToDelete === null) {
-    return response.status(401).json({ error: 'token invalid' });
+    return response.status(404).json({ error: 'blog not found' });
   }
 
   if (blogToDelete.author.toString() !== user.id) {
@@ -53,13 +53,29 @@ blogRouter.delete('/:id', async (request, response) => {
 });
 
 blogRouter.put('/:id', async (request, response) => {
-  const body = request.body;
-  const blog = {
-    title: body.title,
-  };
+  const user = request.user;
 
-  const updateBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
-  response.json(updateBlog);
+  if (user === undefined) {
+    response.status(401).json({ error: 'no authorization' });
+  }
+
+  const body = request.body;
+
+  const blogToUpdate = await Blog.findById(request.params.id);
+
+  if (blogToUpdate === null) {
+    return response.status(404).json({ error: 'blog not found' });
+  }
+
+  if (blogToUpdate.author.toString() !== user.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
+  blogToUpdate.title = body.title ? body.title : blogToUpdate.title;
+  blogToUpdate.url = body.url ? body.url : blogToUpdate.url;
+
+  await blogToUpdate.save();
+  response.json(blogToUpdate);
 });
 
 module.exports = blogRouter;

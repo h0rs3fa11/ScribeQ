@@ -44,6 +44,11 @@ const bloginDB = async () => {
   return blogs.map((blog) => blog.toJSON());
 };
 
+const getBlogById = async (id) => {
+  const blog = await Blog.findById(id);
+  return blog !== null ? blog.toJSON() : null;
+};
+
 const userInDB = async () => {
   const users = await User.find({});
   return users.map((user) => user.toJSON());
@@ -51,9 +56,9 @@ const userInDB = async () => {
 
 const getUserById = async (id) => {
   const user = await User.findById(id);
-  return user.toJSON();
+  return user !== null ? user.toJSON() : null;
 };
 
 module.exports = {
-  initialBlogs, bloginDB, userInDB, getUserById, createInitUsers,
+  initialBlogs, bloginDB, userInDB, getUserById, createInitUsers, getBlogById,
 };

@@ -45,7 +45,7 @@ const userExtractor = async (request, response, next) => {
     const user = await User.findById(decodeToken.id);
 
     if (user === null) {
-      return response.status(401).json({ error: 'user doesn not exist' });
+      return response.status(401).json({ error: 'user does not exist' });
     }
 
     request.user = user;
@@ -55,5 +55,5 @@ const userExtractor = async (request, response, next) => {
 };
 
 module.exports = {
-  requestLogger, unknownEndpoint, errorHandler, tokenExtractor, userExtractor,
+  requestLogger, unknownEndpoint, errorHandler, userExtractor,
 };
