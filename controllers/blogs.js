@@ -13,7 +13,7 @@ blogRouter.post('/', async (request, response) => {
   const user = request.user;
 
   if (user === undefined) {
-    response.status(401).json({ error: 'no authorization' });
+    return response.status(401).json({ error: 'no authorization' });
   }
 
   const newBlog = Blog({
