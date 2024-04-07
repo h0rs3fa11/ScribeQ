@@ -9,6 +9,11 @@ blogRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
+blogRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  response.json(blog);
+});
+
 blogRouter.post('/', async (request, response) => {
   const user = request.user;
 
@@ -73,6 +78,7 @@ blogRouter.put('/:id', async (request, response) => {
 
   blogToUpdate.title = body.title ? body.title : blogToUpdate.title;
   blogToUpdate.url = body.url ? body.url : blogToUpdate.url;
+  blogToUpdate.likes = body.likes ? body.likes : blogToUpdate.likes;
 
   await blogToUpdate.save();
   response.json(blogToUpdate);
