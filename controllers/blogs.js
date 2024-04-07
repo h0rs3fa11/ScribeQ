@@ -72,12 +72,11 @@ blogRouter.put('/:id', async (request, response) => {
     return response.status(404).json({ error: 'blog not found' });
   }
 
-  if (blogToUpdate.author.toString() !== user.id) {
-    return response.status(401).json({ error: 'token invalid' });
+  if (blogToUpdate.author.toString() === user.id) {
+    blogToUpdate.title = body.title ? body.title : blogToUpdate.title;
+    blogToUpdate.url = body.url ? body.url : blogToUpdate.url;
   }
 
-  blogToUpdate.title = body.title ? body.title : blogToUpdate.title;
-  blogToUpdate.url = body.url ? body.url : blogToUpdate.url;
   blogToUpdate.likes = body.likes ? body.likes : blogToUpdate.likes;
 
   await blogToUpdate.save();
