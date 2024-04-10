@@ -3,6 +3,7 @@
 /* eslint-disable prefer-destructuring */
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('author', { username: 1, name: 1, id: 1 });
@@ -32,7 +33,20 @@ blogRouter.post('/', async (request, response) => {
   user.blogs = user.blogs.concat(newBlog._id);
   await user.save();
 
-  return response.status(201).json(result);
+  const userDB = await User.findById(result.author.toString());
+
+  const newResult = {
+    id: result.id,
+    title: result.title,
+    likes: result.likes,
+    url: result.url,
+    author: {
+      username: userDB.username,
+      name: userDB.name,
+    },
+  };
+
+  return response.status(201).json(newResult);
 });
 
 blogRouter.delete('/:id', async (request, response) => {
