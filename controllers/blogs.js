@@ -28,7 +28,8 @@ blogRouter.post('/', async (request, response) => {
   const newBlog = Blog({
     title: request.body.title,
     author: user.id,
-    url: request.body.url,
+    content: request.body.content,
+    _id: request.body._id,
     likes: process.env.NODE_ENV === 'test' ? request.body.likes : 0,
   });
 
@@ -42,7 +43,7 @@ blogRouter.post('/', async (request, response) => {
     id: result.id,
     title: result.title,
     likes: result.likes,
-    url: result.url,
+    content: result.content,
     author: {
       username: userDB.username,
       name: userDB.name,
@@ -91,7 +92,7 @@ blogRouter.put('/:id', async (request, response) => {
 
   if (blogToUpdate.author.toString() === user.id) {
     blogToUpdate.title = body.title ? body.title : blogToUpdate.title;
-    blogToUpdate.url = body.url ? body.url : blogToUpdate.url;
+    blogToUpdate.content = body.content ? body.content : blogToUpdate.content;
   }
 
   blogToUpdate.likes = body.likes ? body.likes : blogToUpdate.likes;

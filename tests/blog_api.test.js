@@ -57,7 +57,7 @@ describe('api basic test', () => {
     test('create blog', async () => {
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
 
@@ -76,7 +76,7 @@ describe('api basic test', () => {
 
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
 
@@ -104,7 +104,7 @@ describe('api basic test', () => {
       const newBlog = {
         title: 'lol',
         author: 'abc',
-        url: 'http://google.com',
+        content: 'http://google.com',
       };
       const result = await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(201);
       assert(result.body.likes === 0);
@@ -142,7 +142,7 @@ describe('api basic test', () => {
       const { token, id } = loginInfo.body;
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
 
@@ -185,7 +185,7 @@ describe('api basic test', () => {
 
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
       // create a blog with init1
@@ -221,7 +221,7 @@ describe('api basic test', () => {
           const { token, id } = loginInfo.body;
           const newBlog = {
             title: 'lol',
-            url: 'http://google.com',
+            content: 'http://google.com',
             likes: 5,
           };
 
@@ -261,7 +261,7 @@ describe('api basic test', () => {
       const { token, id } = loginInfo.body;
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
 
@@ -306,7 +306,7 @@ describe('api basic test', () => {
       const { token, id } = loginInfo.body;
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
 
@@ -346,7 +346,7 @@ describe('api basic test', () => {
       const { token, id } = loginInfo.body;
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
 
@@ -385,7 +385,7 @@ describe('api basic test', () => {
       const { token, id } = loginInfo.body;
       const newBlog = {
         title: 'lol',
-        url: 'http://google.com',
+        content: 'http://google.com',
         likes: 5,
       };
 
