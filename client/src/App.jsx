@@ -2,6 +2,7 @@ import { createContext, useEffect } from "react";
 import Blogs from "./components/blogs";
 import Blog from "./components/blog";
 import LoginForm from "./components/login";
+import RegisterForm from "./components/register";
 import BlogForm from "./components/blogForm";
 import Home from "./components/home";
 import Account from "./components/account";
@@ -78,6 +79,7 @@ function App() {
 
         <Routes>
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
           <Route
             path="/account"
             element={

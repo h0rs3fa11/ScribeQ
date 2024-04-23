@@ -1,7 +1,11 @@
 # A full-stack blog platform
 tech stack: NodeJS, Express, MongoDB, React, Redux, Bootstrap
+## package
+```
+cd client/ && npm install && cd ../server && npm install
+```
 ## env
-Create a `.env` file
+Create a `.env` file inside `server/`
 
 ## build
 ```

@@ -4,7 +4,7 @@ import { setError } from "../reducers/notificationReducer";
 import loginService from "../services/login";
 import blogService from "../services/blog";
 import { setCurrentUser } from "../reducers/userReducer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Form, Button, FormGroup } from "react-bootstrap";
 import { localStorageContext } from "../main";
 import { useContext } from "react";
@@ -52,8 +52,11 @@ const LoginForm = () => {
               <Form.Label>password</Form.Label>
               <Form.Control type="password" id="password" name="password" />
             </FormGroup>
-            <Button type="submit" id="login-button">
+            <Button className="button-spacing me-2" type="submit" id="login-button">
               login
+            </Button>
+            <Button as={Link} to="/register">
+              register
             </Button>
           </Form>
           {/* </Togglable> */}

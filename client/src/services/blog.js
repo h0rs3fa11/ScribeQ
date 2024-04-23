@@ -1,6 +1,6 @@
 import axios from "axios";
 const BASE_URI = import.meta.env.VITE_BASE_URL;
-
+const blogURI = BASE_URI + '/api/blogs'
 let token = null;
 
 const setToken = (newToken) => {
@@ -8,8 +8,8 @@ const setToken = (newToken) => {
 };
 
 const getAll = async () => {
-  console.log(BASE_URI)
-  const response = await axios.get(BASE_URI);
+  console.log(blogURI)
+  const response = await axios.get(blogURI);
   return response.data;
 };
 
@@ -18,7 +18,7 @@ const createBlog = async (newBlog) => {
     headers: { Authorization: token },
   };
 
-  const response = await axios.post(BASE_URI, newBlog, config);
+  const response = await axios.post(blogURI, newBlog, config);
   return response.data;
 };
 
@@ -33,12 +33,12 @@ const addLikes = async (id) => {
     likes: blog.likes + 1,
   };
 
-  const response = await axios.put(`${BASE_URI}/${id}`, updateContent, config);
+  const response = await axios.put(`${blogURI}/${id}`, updateContent, config);
   return response.data;
 };
 
 const getOne = async (id) => {
-  const response = await axios.get(`${BASE_URI}/${id}`);
+  const response = await axios.get(`${blogURI}/${id}`);
   return response.data;
 };
 
@@ -46,7 +46,7 @@ const deleteOne = async (id) => {
   const config = {
     headers: { Authorization: token },
   };
-  const response = await axios.delete(`${BASE_URI}/${id}`, config);
+  const response = await axios.delete(`${blogURI}/${id}`, config);
   return response.data;
 };
 
