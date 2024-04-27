@@ -42,6 +42,11 @@ const getOne = async (id) => {
   return response.data;
 };
 
+const getTopBlogs = async() => {
+  const response = await axios.get(`${blogURI}/top-likes/5`);
+  return response.data;
+}
+
 const deleteOne = async (id) => {
   const config = {
     headers: { Authorization: token },
@@ -50,4 +55,4 @@ const deleteOne = async (id) => {
   return response.data;
 };
 
-export default { getAll, createBlog, setToken, addLikes, getOne, deleteOne };
+export default { getAll, createBlog, setToken, addLikes, getOne, deleteOne, getTopBlogs };

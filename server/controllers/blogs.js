@@ -18,6 +18,13 @@ blogRouter.get('/:id', async (request, response) => {
   response.json(blog);
 });
 
+blogRouter.get('/top-likes/:number', async (request, response) => {
+  const blogs = await Blog.find({})
+    .sort({ like: -1 })
+    .limit(request.params.number);
+  response.json(blogs);
+});
+
 blogRouter.post('/', async (request, response) => {
   const user = request.user;
 

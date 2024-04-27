@@ -1,20 +1,32 @@
+import Carousel from 'react-bootstrap/Carousel';
+import blogService from "../services/blog";
+import { useEffect, useState } from 'react';
+
 const Home = () => {
+  const [blogs, setBlogs] = useState([])
+
+  useEffect(() => {
+    blogService.getTopBlogs().then(blogs => setBlogs(blogs))
+  }, [])
+
   return (
     <div>
-      <h1>Blog platform</h1>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
-      distinctio quod ratione doloribus et, veniam exercitationem placeat
-      fugiat, impedit sed dolorem, quis quae dolorum beatae minima omnis itaque
-      eaque pariatur aperiam nihil sit repellendus numquam iste facilis. Rerum,
-      blanditiis voluptatibus praesentium odio modi provident unde sit non
-      ratione sapiente quae fugit, dolor mollitia commodi nobis, accusamus quis
-      sunt fugiat. Omnis soluta alias quibusdam ipsum laborum impedit?
-      Necessitatibus, illo iure! Nihil in maiores deserunt necessitatibus est?
-      Expedita libero possimus maiores cum, vitae quis reiciendis soluta sit
-      suscipit distinctio repellat, fuga autem. Ipsum soluta necessitatibus in
-      laborum, commodi modi nesciunt suscipit! Impedit recusandae temporibus,
-      nostrum molestias error doloremque harum, porro, iure minima veritatis
-      aspernatur!
+      <h1>ScribeQ</h1>
+      <h2>Recommend</h2>
+      <Carousel>
+        {blogs.map(blog => <Carousel.Item key={blog.id}>
+          <img
+            className="d-block w-100"
+            src="https://placehold.co/800x400"
+            alt="First slide"
+          />
+          <Carousel.Caption>
+            <h3>{blog.title}</h3>
+            {/* TODO: get username */}
+            {/* <p>By {blog.author}</p> */}
+          </Carousel.Caption>
+        </Carousel.Item>)}
+      </Carousel>
     </div>
   );
 };
