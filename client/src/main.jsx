@@ -7,7 +7,6 @@ import userReducer from "./reducers/userReducer.js";
 import notificationReducer from "./reducers/notificationReducer.js";
 import { BrowserRouter as Router } from "react-router-dom";
 import { createContext } from "react";
-// import './index.css'
 
 export const localStorageContext = createContext("");
 

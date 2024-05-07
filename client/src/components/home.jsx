@@ -1,6 +1,7 @@
 import Carousel from 'react-bootstrap/Carousel';
 import blogService from "../services/blog";
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,7 +12,6 @@ const Home = () => {
 
   return (
     <div>
-      <h1>ScribeQ</h1>
       <h2>Recommend</h2>
       <Carousel>
         {blogs.map(blog => <Carousel.Item key={blog.id}>
@@ -20,7 +20,7 @@ const Home = () => {
             src="https://placehold.co/800x400"
             alt="First slide"
           />
-          <Carousel.Caption>
+          <Carousel.Caption  as={Link} to={`/blogs/${blog.id}`}>
             <h3>{blog.title}</h3>
             {/* TODO: get username */}
             {/* <p>By {blog.author}</p> */}

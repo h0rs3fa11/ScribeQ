@@ -13,13 +13,12 @@ const Blogs = () => {
     <div>
       {user.loggedIn && (
         <div>
-          <h1>blog</h1>
+          {/* <h1>blog</h1> */}
           <Link to={`/blogs/${blogId}/edit`} state={{ blogId: blogId }}>
             <p>Create New Blog</p>
           </Link>
-          <h2>Blog list</h2>
           {blogs.map((blog) => (
-            <Card key={blog.id} className="row my-3">
+            <Card key={blog.id} className="blog-list row my-3">
               {/* <Card.Img variant="top" src="https://picsum.photos/50" /> */}
               <Card.Body>
                 <Card.Title>{blog.title}</Card.Title>

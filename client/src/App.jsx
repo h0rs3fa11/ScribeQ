@@ -13,8 +13,9 @@ import { setCurrentUser } from "./reducers/userReducer";
 import blogService from "./services/blog";
 import { Alert } from "react-bootstrap";
 import { Routes, Route, Link, Navigate, useMatch } from "react-router-dom";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Form, InputGroup, Col, Row, Button } from "react-bootstrap";
 import { localStorageContext } from "./main";
+import './assets/css/app.css'
 
 function App() {
   const localStorageKey = "loggedBlogUser";
@@ -49,14 +50,10 @@ function App() {
       <div className="container">
         {notify.info && <Alert variant={notify.type}>{notify.info}</Alert>}
         <Navbar collapseOnSelect expand="lg">
+          <Navbar.Brand href="/" id="website-title">ScribeQ</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#" as="span">
-                <Link style={padding} to="/">
-                  Home
-                </Link>
-              </Nav.Link>
               <Nav.Link href="#" as="span">
                 <Link style={padding} to="/blogs">
                   Blogs
@@ -75,6 +72,20 @@ function App() {
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
+          <Form inline="true">
+            <Row>
+              <Col xs="auto">
+                <Form.Control
+                  type="text"
+                  placeholder="Search"
+                  className=" mr-sm-2"
+                />
+              </Col>
+              <Col xs="auto">
+                <Button type="submit">Search</Button>
+              </Col>
+            </Row>
+          </Form>
         </Navbar>
 
         <Routes>
