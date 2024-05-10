@@ -1,28 +1,13 @@
-import { Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { clearLoggedUser } from "../reducers/userReducer";
-import { useContext } from "react";
-import { localStorageContext } from "../main";
+import { Container, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const Account = () => {
-  const navigate = useNavigate();
-  const localStorageKey = useContext(localStorageContext);
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  const useLogout = async () => {
-    window.localStorage.removeItem(localStorageKey);
-    console.log("remove logged");
-    dispatch(clearLoggedUser());
-    navigate("/");
-  };
-
   return (
-    <div>
+    <Container>
       <h1>Account {user.username}</h1>
-      <Button onClick={useLogout}>log out</Button>
-    </div>
+    </Container>
   );
 };
 

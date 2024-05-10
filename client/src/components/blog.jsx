@@ -5,7 +5,7 @@ import { removeBlog } from "../reducers/blogReducer";
 import { setError } from "../reducers/notificationReducer";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const Blog = ({ blog }) => {
   };
 
   return (
-    <div className="blog">
+    <Container className="blog">
       <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
       <ul>
         <li>{blog.content}</li>
@@ -48,7 +48,7 @@ const Blog = ({ blog }) => {
           remove
         </Button>
       )}
-    </div>
+    </Container>
   );
 };
 

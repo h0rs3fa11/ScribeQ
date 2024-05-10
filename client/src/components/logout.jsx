@@ -3,6 +3,7 @@ import { clearLoggedUser } from "../reducers/userReducer";
 import { useDispatch } from "react-redux";
 import { useContext } from "react";
 import { localStorageContext } from "../main";
+import { Container } from "react-bootstrap"
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -17,13 +18,13 @@ const Logout = () => {
   };
 
   return (
-    <div>
+    <Container>
       <form onSubmit={useLogout}>
         <button type="submit" onClick>
           logout
         </button>
       </form>
-    </div>
+    </Container>
   );
 };
 

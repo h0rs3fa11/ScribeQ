@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { setError, setInfo } from "../reducers/notificationReducer";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Form, Button, FormGroup } from "react-bootstrap";
+import { Container, Form, Button, FormGroup } from "react-bootstrap";
 
 const BlogForm = ({ createBlog }) => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const BlogForm = ({ createBlog }) => {
   };
 
   return (
-    <div>
+    <Container>
       <h2>Create a Blog</h2>
       <Form onSubmit={handleCreateBlog} className="create-form">
         <FormGroup>
@@ -58,7 +58,7 @@ const BlogForm = ({ createBlog }) => {
           create
         </Button>
       </Form>
-    </div>
+    </Container>
   );
 };
 

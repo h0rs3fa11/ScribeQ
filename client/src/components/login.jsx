@@ -5,7 +5,7 @@ import loginService from "../services/login";
 import blogService from "../services/blog";
 import { setCurrentUser } from "../reducers/userReducer";
 import { useNavigate, Link } from "react-router-dom";
-import { Form, Button, FormGroup } from "react-bootstrap";
+import { Container, Form, Button, FormGroup } from "react-bootstrap";
 import { localStorageContext } from "../main";
 import { useContext } from "react";
 
@@ -39,7 +39,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
+    <Container>
       {!curUser.loggedIn && (
         <div>
           <h2>Login</h2>
@@ -68,7 +68,7 @@ const LoginForm = () => {
           <p>{curUser.username} logged in</p>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 

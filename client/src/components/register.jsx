@@ -1,4 +1,4 @@
-import { Form, Button, FormGroup } from "react-bootstrap";
+import { Container, Form, Button, FormGroup } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import register from "../services/user";
@@ -27,7 +27,7 @@ const RegisterForm = () => {
   }
 
   return (
-    <div>
+    <Container>
       <Form onSubmit={onRegister}>
         <FormGroup>
           <Form.Label>username</Form.Label>
@@ -41,7 +41,7 @@ const RegisterForm = () => {
           register
         </Button>
       </Form>
-    </div>
+    </Container>
   )
 }
 

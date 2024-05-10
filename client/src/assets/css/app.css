@@ -27,3 +27,13 @@ Nav {
     font-weight: 400;
     font-style: normal;
 }
+
+.icon-dropdown-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fa-pen-to-square {
+    cursor: pointer;
+}

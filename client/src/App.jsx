@@ -1,4 +1,4 @@
-import { createContext, useEffect } from "react";
+import { useEffect } from "react";
 import Blogs from "./components/blogs";
 import Blog from "./components/blog";
 import LoginForm from "./components/login";
@@ -6,15 +6,20 @@ import RegisterForm from "./components/register";
 import BlogForm from "./components/blogForm";
 import Home from "./components/home";
 import Account from "./components/account";
+import { clearLoggedUser } from "./reducers/userReducer";
 import { updateAll } from "./reducers/blogReducer";
 import { createBlog } from "./reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducers/userReducer";
 import blogService from "./services/blog";
-import { Alert } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { Routes, Route, Link, Navigate, useMatch } from "react-router-dom";
-import { Navbar, Nav, Form, InputGroup, Col, Row, Button } from "react-bootstrap";
+import { Navbar, Nav, Form, Col, Row, Button, Dropdown } from "react-bootstrap";
 import { localStorageContext } from "./main";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faSignIn, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
+import { generateId } from "./utils/helper";
 import './assets/css/app.css'
 
 function App() {
@@ -23,6 +28,8 @@ function App() {
   const blogs = useSelector((state) => state.blog);
   const notify = useSelector((state) => state.notify);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const blogId = generateId();
 
   useEffect(() => {
     dispatch(updateAll());
@@ -41,51 +48,56 @@ function App() {
   const match = useMatch("/blogs/:id");
   const blog = match ? blogs.find((b) => b.id === match.params.id) : null;
 
-  const padding = {
-    padding: 5,
+  const useLogout = async () => {
+    window.localStorage.removeItem(localStorageKey);
+    console.log("remove logged");
+    dispatch(clearLoggedUser());
+    navigate("/");
   };
 
   return (
     <localStorageContext.Provider value={localStorageKey}>
-      <div className="container">
+      <Container>
         {notify.info && <Alert variant={notify.type}>{notify.info}</Alert>}
         <Navbar collapseOnSelect expand="lg">
           <Navbar.Brand href="/" id="website-title">ScribeQ</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#" as="span">
-                <Link style={padding} to="/blogs">
-                  Blogs
+            {curUser.loggedIn && <Form inline="true" className="mx-3">
+              <Row>
+                <Col xs="auto">
+                  <Form.Control
+                    type="text"
+                    placeholder="Search"
+                    className="mr-sm-2"
+                  />
+                </Col>
+                <Col xs="auto">
+                  <Button type="submit">Search</Button>
+                </Col>
+              </Row>
+            </Form>}
+            <Nav className="ms-auto">
+              {curUser.loggedIn ? <div className="icon-dropdown-group">
+                <Link to={`/blogs/${blogId}/edit`} state={{ blogId: blogId }}>
+                  <FontAwesomeIcon className="fa-pen-to-square" icon={faPenToSquare} title="Create a New Blog" />
                 </Link>
-              </Nav.Link>
-              <Nav.Link href="#" as="span">
-                {curUser.loggedIn ? (
-                  <Link style={padding} to="/account">
-                    Account
-                  </Link>
-                ) : (
-                  <Link style={padding} to="/login">
-                    Login
-                  </Link>
-                )}
-              </Nav.Link>
+                <Dropdown>
+                  <Dropdown.Toggle id="dropdown-basic">
+                    <FontAwesomeIcon icon={faUser} title="Account" />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/account">Profile</Dropdown.Item>
+                    <Dropdown.Item onClick={useLogout}>Logout</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div> : (
+                <Nav.Link as={Link} to="/login">
+                  <FontAwesomeIcon icon={faSignIn} title="Sign In" />
+                </Nav.Link>
+              )}
             </Nav>
           </Navbar.Collapse>
-          <Form inline="true">
-            <Row>
-              <Col xs="auto">
-                <Form.Control
-                  type="text"
-                  placeholder="Search"
-                  className=" mr-sm-2"
-                />
-              </Col>
-              <Col xs="auto">
-                <Button type="submit">Search</Button>
-              </Col>
-            </Row>
-          </Form>
         </Navbar>
 
         <Routes>
@@ -105,8 +117,8 @@ function App() {
           />
           <Route path="/" element={<Home />} />
         </Routes>
-      </div>
-    </localStorageContext.Provider>
+      </Container>
+    </localStorageContext.Provider >
   );
 }
 
