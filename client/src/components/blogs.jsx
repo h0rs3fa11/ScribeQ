@@ -21,7 +21,6 @@ const Blogs = () => {
           </Card.Body>
         </Card>
       ))}
-      )
     </Container>
   );
 };

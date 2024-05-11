@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import blogService from "../services/blog";
 import { removeBlog } from "../reducers/blogReducer";
 import { setError } from "../reducers/notificationReducer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Button } from "react-bootstrap";
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate()
   const [likes, setLikes] = useState(0);
 
   useEffect(() => {
@@ -42,7 +43,11 @@ const Blog = ({ blog }) => {
       {user.username === blog.author.username && (
         <Button
           variant="danger"
-          onClick={() => dispatch(removeBlog(blog.id))}
+          onClick={() => {
+            dispatch(removeBlog(blog.id))
+            navigate('/')
+          }
+          }
           className="remove-button"
         >
           remove
