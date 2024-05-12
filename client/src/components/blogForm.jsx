@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import getOne from "../services/blog";
 import { Container, Form, Row, Col, InputGroup, Button } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const BlogForm = ({ createBlog }) => {
   const navigate = useNavigate();
@@ -13,10 +13,19 @@ const BlogForm = ({ createBlog }) => {
   const params = useParams();
   const [text, setText] = useState("")
   const [title, setTitle] = useState("")
+  const textAreaRef = useRef(null)
 
   const handleChange = (event) => {
     setText(event.target.value);
   };
+
+  useEffect(() => {
+    const textArea = textAreaRef.current;
+    if(textArea) {
+      textArea.style.height = 'auto';
+      textArea.style.height = `${textArea.scrollHeight}px`; // 根据内容设置高度
+    }
+  })
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value)
@@ -63,11 +72,12 @@ const BlogForm = ({ createBlog }) => {
               <Form.Control
                 className="content"
                 as="textarea"
-                placeholder="Share your thoughts"
+                ref={textAreaRef}
+                placeholder="What's on your mind?"
                 value={text}
                 onChange={handleChange}
-                style={{ height: 'auto' }}
-                rows={Math.max(1, text.split('\n').length || 1)}
+                style={{ height: 'auto', overflow: 'hidden'}}
+                // rows={Math.max(1, text.split('\n').length || 1)}
               />
             </InputGroup>
           </Col>
