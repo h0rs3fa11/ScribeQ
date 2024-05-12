@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { setError, setInfo } from "../reducers/notificationReducer";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import getOne from "../services/blog";
 import { Container, Form, Row, Col, InputGroup, Button } from "react-bootstrap";
 import { useState } from "react";
 
@@ -30,11 +31,12 @@ const BlogForm = ({ createBlog }) => {
     };
 
     try {
-      dispatch(createBlog(blogObj));
+      const blog = await dispatch(createBlog(blogObj));
+      console.log(blog);
       dispatch(setInfo("Create blog success"));
       setTimeout(() => dispatch(setInfo("")), 5000);
-      navigate('/')
-      // navigate(`/blogs/${params.id}`);
+      // navigate('/')
+      navigate(`/blogs/${params.id}`, {blog: blog});
     } catch (exception) {
       dispatch(setError(`Create blog failed: ${exception}`));
       setTimeout(() => dispatch(setError("")), 5000);

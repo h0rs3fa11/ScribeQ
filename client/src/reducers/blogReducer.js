@@ -14,9 +14,14 @@ const blogReducer = (state = [], action) => {
 };
 
 export const createBlog = (blogObj) => async (dispatch) => {
-  // TODO: no error handling
-  const blog = await blogService.createBlog(blogObj);
-  dispatch({ type: "NEW_BLOG", payload: blog });
+  try{
+    const blog = await blogService.createBlog(blogObj);
+    dispatch({ type: "NEW_BLOG", payload: blog });
+    return blog;
+  } catch(err) {
+    console.error("Failed to create blog", err);
+    throw err;
+  }
 };
 
 export const updateAll = () => async (dispatch) => {

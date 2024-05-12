@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import blogService from "../services/blog";
 import { removeBlog } from "../reducers/blogReducer";
 import { setError } from "../reducers/notificationReducer";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Button } from "react-bootstrap";
 
@@ -26,6 +26,10 @@ const Blog = ({ blog }) => {
       setTimeout(() => dispatch(setError("")), 5000);
     }
   };
+
+  if(!blog) {
+    return <div>Loading...</div>
+  }
 
   return (
     <Container className="blog">

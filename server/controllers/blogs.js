@@ -15,6 +15,9 @@ blogRouter.get('/', async (request, response) => {
 
 blogRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id);
+  if (blog === null) {
+    response.status(404).json({ error: 'id does not exist' });
+  }
   response.json(blog);
 });
 
