@@ -5,17 +5,35 @@ import { removeBlog } from "../reducers/blogReducer";
 import { setError } from "../reducers/notificationReducer";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button, Row, Col } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const navigate = useNavigate()
+  const { id } = useParams()
   const [likes, setLikes] = useState(0);
+  const [content, setContent] = useState(null);
 
   useEffect(() => {
-    setLikes(blog.likes);
-  }, [blog]);
+    const fetchBlog = async () => {
+      if (!content && id) {
+        try {
+          const resp = await blogService.getOne(id);
+          setContent(resp);
+          setLikes(resp.likes);
+        } catch (err) {
+          console.error('Error fetching blog:', err);
+          navigate('/');
+        }
+      } else {
+        setLikes(content.likes);
+      }
+    };
+    fetchBlog();
+  }, [id, navigate]);
 
   const updateLikes = async () => {
     try {
@@ -27,36 +45,60 @@ const Blog = ({ blog }) => {
     }
   };
 
-  if(!blog) {
+  if (!blog) {
     return <div>Loading...</div>
   }
 
   return (
-    <Container className="blog">
-      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-      <ul>
-        <li>{blog.content}</li>
-        <li>
-          Like <span>{likes}</span>
-          <Button onClick={updateLikes} className="like-button">
-            like
-          </Button>
-        </li>
-        <li>{blog.author.name ? blog.author.name : blog.author.username}</li>
-      </ul>
-      {user.username === blog.author.username && (
-        <Button
-          variant="danger"
-          onClick={() => {
-            dispatch(removeBlog(blog.id))
-            navigate('/')
-          }
-          }
-          className="remove-button"
-        >
-          remove
-        </Button>
-      )}
+    <Container className="mt5">
+      <Row className="justify-content-md-center">
+        <Col className="text-center">
+          <h1 className="title">{blog.title}</h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col className="text-center">
+          {blog.author.name ? blog.author.name : blog.author.username}
+        </Col>
+      </Row>
+
+      <Row className="mt-3 justify-content-md-center">
+        {user.username !== blog.author.username &&
+        <Col xs lg="1" className="text-center">
+          <Link onClick={updateLikes} className="like-button">
+            <FontAwesomeIcon className="pe-2" icon={faHeart} title="Create a New Blog" />
+            <span>{likes}</span>
+          </Link>
+        </Col>
+        }
+        {user.username === blog.author.username &&
+          <>
+            <Col xs lg="1" className="d-flex justify-content-end align-items-center">
+              <Link onClick={updateLikes} className="like-button">
+                <FontAwesomeIcon className="pe-2" icon={faHeart} title="Create a New Blog" />
+                <span>{likes}</span>
+              </Link>
+            </Col>
+            <Col xs lg="1">
+              <Link onClick={async () => {
+                // TODO: alert
+                await dispatch(removeBlog(blog.id))
+                navigate('/')
+              }} className="remove-button">
+                <FontAwesomeIcon icon={faTrashCan} title="Delete this" />
+              </Link>
+            </Col>
+          </>
+        }
+      </Row>
+
+      <Row>
+        <Col className="mt-3 text-center content">
+          {blog.content}
+        </Col>
+      </Row>
+
+
     </Container>
   );
 };
