@@ -1,4 +1,4 @@
-import { Container, Form, Button, FormGroup } from "react-bootstrap";
+import { Container, Form, Button, FormGroup, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import register from "../services/user";
@@ -27,20 +27,21 @@ const RegisterForm = () => {
   }
 
   return (
-    <Container>
+    <Container className="d-flex justify-content-md-center align-items-center">
+      <Row className="w-50 justify-content-md-center mt-5">
+      <h2>Register</h2>
       <Form onSubmit={onRegister}>
         <FormGroup>
-          <Form.Label>username</Form.Label>
-          <Form.Control type="text" id="username" name="username" />
+          <Form.Control type="text" id="username" name="username" placeholder="username"/>
         </FormGroup>
-        <FormGroup>
-          <Form.Label>password</Form.Label>
-          <Form.Control type="password" id="password" name="password" />
+        <FormGroup className="mb-3 mt-3">
+          <Form.Control type="password" id="password" name="password" placeholder="password" />
         </FormGroup>
-        <Button type="submit">
-          register
+        <Button type="submit" className="me-2">
+          submit
         </Button>
       </Form>
+      </Row>
     </Container>
   )
 }
