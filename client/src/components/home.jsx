@@ -1,4 +1,4 @@
-import { Container, Carousel } from 'react-bootstrap';
+import { Container, Carousel, Row, Col, Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import blogService from "../services/blog";
 import Blogs from "../components/blogs";
@@ -15,7 +15,15 @@ const Home = () => {
 
   return (
     <Container>
-      {!user.loggedIn && <div>log in first</div>}
+      {!user.loggedIn && 
+      <Container className="d-flex justify-content-md-center align-items-center min-vh-100">
+        <Row className="w-100 justify-content-md-center">
+          <Col className="content text-center" md="6" lg="6">
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quisquam dolorum odio eum quae sed labore ab. Ea repellat, laboriosam accusamus commodi officia cumque quia possimus adipisci consequuntur deleniti atque?</p>
+          <Button as={Link} to="/login">Start Reading</Button>
+          </Col>
+        </Row>
+      </Container>}
       {user.loggedIn && <div>
         <h2>Recommend</h2>
         <Carousel>
