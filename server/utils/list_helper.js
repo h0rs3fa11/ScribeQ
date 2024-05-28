@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-const dummy = (blogs) => 1;
+const ObjectID = require('bson-objectid');
 
 const totalLikes = (blogs) => {
   if (blogs.length === 0) return 0;
@@ -15,8 +15,10 @@ const favouriteBlog = (blogs) => {
   return result;
 };
 
+const generateId = () => ObjectID();
+
 module.exports = {
-  dummy,
   totalLikes,
   favouriteBlog,
+  generateId,
 };

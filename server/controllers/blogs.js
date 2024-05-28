@@ -4,6 +4,7 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const { generateId } = require('../utils/list_helper');
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})
@@ -39,7 +40,7 @@ blogRouter.post('/', async (request, response) => {
     title: request.body.title,
     author: user.id,
     content: request.body.content,
-    _id: request.body._id,
+    _id: request.body._id !== undefined ? request.body._id : generateId(),
     likes: process.env.NODE_ENV === 'test' ? request.body.likes : 0,
   });
 
@@ -103,6 +104,8 @@ blogRouter.put('/:id', async (request, response) => {
   if (blogToUpdate.author.toString() === user.id) {
     blogToUpdate.title = body.title ? body.title : blogToUpdate.title;
     blogToUpdate.content = body.content ? body.content : blogToUpdate.content;
+  } else {
+    response.status(401).json({ error: 'no authorization' });
   }
 
   blogToUpdate.likes = body.likes ? body.likes : blogToUpdate.likes;

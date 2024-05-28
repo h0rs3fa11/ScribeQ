@@ -12,6 +12,7 @@ const helper = require('./test_helper');
 const app = require('../app');
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const { generateId } = require('../utils/list_helper');
 
 const api = supertest(app);
 
@@ -75,13 +76,12 @@ describe('api basic test', () => {
       const { token } = loginInfo.body;
 
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
-        content: 'http://google.com',
-        likes: 5,
+        content: 'asdaiohisoahd',
       };
 
       const oldResult = await api.get('/api/blogs').expect(200);
-
       await api.post('/api/blogs/').set('Authorization', `Bearer ${token}`).send(newBlog).expect(201);
       // include the new blog
       const newResult = await api.get('/api/blogs');
@@ -102,8 +102,8 @@ describe('api basic test', () => {
       const { token } = loginInfo.body;
 
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
-        author: 'abc',
         content: 'http://google.com',
       };
       const result = await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(201);
@@ -141,9 +141,9 @@ describe('api basic test', () => {
       const loginInfo = await api.post('/api/login').send(user).expect(200);
       const { token, id } = loginInfo.body;
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
         content: 'http://google.com',
-        likes: 5,
       };
 
       await api.post('/api/blogs/').set('Authorization', `Bearer ${token}`).send(newBlog).expect(201);
@@ -184,9 +184,9 @@ describe('api basic test', () => {
       const token2 = loginInfoUser2.body.token;
 
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
         content: 'http://google.com',
-        likes: 5,
       };
       // create a blog with init1
       await api.post('/api/blogs/').set('Authorization', `Bearer ${token}`).send(newBlog).expect(201);
@@ -210,43 +210,43 @@ describe('api basic test', () => {
     });
 
     test('delete non-exist blog', async () => {
-          // login
-          const user = {
-            username: 'init1',
-            password: 'asdfasasd',
-          };
+      // login
+      const user = {
+        username: 'init1',
+        password: 'asdfasasd',
+      };
 
-          const loginInfo = await api.post('/api/login').send(user).expect(200);
+      const loginInfo = await api.post('/api/login').send(user).expect(200);
 
-          const { token, id } = loginInfo.body;
-          const newBlog = {
-            title: 'lol',
-            content: 'http://google.com',
-            likes: 5,
-          };
+      const { token, id } = loginInfo.body;
+      const newBlog = {
+        _id: generateId(),
+        title: 'lol',
+        content: 'http://google.com',
+      };
 
-          const blog = await api.post('/api/blogs/')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newBlog)
-            .expect(201);
+      const blog = await api.post('/api/blogs/')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+        .expect(201);
 
-          const userInfo = await helper.getUserById(id);
+      const userInfo = await helper.getUserById(id);
 
-          assert(userInfo.blogs.length);
+      assert(userInfo.blogs.length);
 
-          await api.delete(`/api/blogs/${blog.body.id}`)
-            .set('Authorization', `Bearer ${token}`)
-            .expect(204);
+      await api.delete(`/api/blogs/${blog.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(204);
 
-          // ensure it's been deleted
-          const deletedBlog = await helper.getBlogById(blog.body.id);
+      // ensure it's been deleted
+      const deletedBlog = await helper.getBlogById(blog.body.id);
 
-          assert(deletedBlog === null);
+      assert(deletedBlog === null);
 
-          await api.delete(`/api/blogs/${blog.body.id}`)
-            .set('Authorization', `Bearer ${token}`)
-            .expect(404);
-        });
+      await api.delete(`/api/blogs/${blog.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404);
+    });
   });
 
   describe('update of a blog', () => {
@@ -260,9 +260,9 @@ describe('api basic test', () => {
       const loginInfo = await api.post('/api/login').send(user).expect(200);
       const { token, id } = loginInfo.body;
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
         content: 'http://google.com',
-        likes: 5,
       };
 
       const blog = await api.post('/api/blogs/')
@@ -305,9 +305,9 @@ describe('api basic test', () => {
 
       const { token, id } = loginInfo.body;
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
         content: 'http://google.com',
-        likes: 5,
       };
 
       const blog = await api.post('/api/blogs/')
@@ -345,9 +345,9 @@ describe('api basic test', () => {
 
       const { token, id } = loginInfo.body;
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
         content: 'http://google.com',
-        likes: 5,
       };
 
       const blog = await api.post('/api/blogs/')
@@ -384,9 +384,9 @@ describe('api basic test', () => {
 
       const { token, id } = loginInfo.body;
       const newBlog = {
+        _id: generateId(),
         title: 'lol',
         content: 'http://google.com',
-        likes: 5,
       };
 
       const blog = await api.post('/api/blogs/')

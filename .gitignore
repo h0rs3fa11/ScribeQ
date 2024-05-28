@@ -5,3 +5,4 @@ node_modules
 requests
 coverage
 .DS_Store
+requests
