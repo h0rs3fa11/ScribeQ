@@ -2,7 +2,7 @@ import { Container, Form, Button, FormGroup, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import register from "../services/user";
-import { setError } from "../reducers/notificationReducer";
+import { setInfo, setError } from "../reducers/notificationReducer";
 
 const RegisterForm = () => {
   const dispatch = useDispatch()
@@ -16,11 +16,15 @@ const RegisterForm = () => {
         password: event.target.password.value
       })
       console.log(user)
-      navigate("/login");
+      dispatch(setInfo("Register success!"))
+      setTimeout(() => {
+        dispatch(setInfo(""))
+        navigate("/login");
+      }, 5000)
     } catch (e) {
       console.log(e)
       dispatch(setError("invalid register info"));
-      setTimeout(() => dispatch(setError("")), 5000);
+      setTimeout(() => dispatch(setError("")), 5000)
     }
     event.target.username.value = "";
     event.target.username.password = "";
