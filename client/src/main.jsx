@@ -5,6 +5,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import blogReducer from "./reducers/blogReducer.js";
 import userReducer from "./reducers/userReducer.js";
 import notificationReducer from "./reducers/notificationReducer.js";
+import searchReducer from "./reducers/searchReducer.js";
 import { BrowserRouter as Router } from "react-router-dom";
 import { createContext } from "react";
 
@@ -15,6 +16,7 @@ const store = configureStore({
     blog: blogReducer,
     user: userReducer,
     notify: notificationReducer,
+    search: searchReducer,
   },
 });
 

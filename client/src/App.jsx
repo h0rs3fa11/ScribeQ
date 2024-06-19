@@ -6,6 +6,8 @@ import RegisterForm from "./components/register";
 import BlogForm from "./components/blogForm";
 import Home from "./components/home";
 import Account from "./components/account";
+import Search from "./components/search";
+import SearchResult from "./components/searchResult";
 import { clearLoggedUser } from "./reducers/userReducer";
 import { updateAll } from "./reducers/blogReducer";
 import { createBlog } from "./reducers/blogReducer";
@@ -63,20 +65,7 @@ function App() {
           <Navbar.Brand href="/" id="website-title">ScribeQ</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            {curUser.loggedIn && <Form inline="true" className="mx-3">
-              <Row>
-                <Col xs="auto">
-                  <Form.Control
-                    type="text"
-                    placeholder="Search"
-                    className="mr-sm-2"
-                  />
-                </Col>
-                <Col xs="auto">
-                  <Button type="submit">Search</Button>
-                </Col>
-              </Row>
-            </Form>}
+            {curUser.loggedIn && <Search />}
             <Nav className="ms-auto">
               {curUser.loggedIn ? <div className="icon-dropdown-group">
                 <Link to={`/blogs/${blogId}/edit`} state={{ blogId: blogId }}>
@@ -116,6 +105,7 @@ function App() {
             element={<BlogForm createBlog={createBlog} />}
           />
           <Route path="/" element={<Home />} />
+          <Route path="/searchResults" element={<SearchResult />} />
         </Routes>
       </Container>
     </localStorageContext.Provider >

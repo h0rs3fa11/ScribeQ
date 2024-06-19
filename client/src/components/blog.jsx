@@ -5,7 +5,7 @@ import { removeBlog } from "../reducers/blogReducer";
 import { setError } from "../reducers/notificationReducer";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Container, Button, Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faHeart } from '@fortawesome/free-solid-svg-icons';
 

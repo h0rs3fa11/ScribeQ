@@ -11,6 +11,7 @@ const config = require('./utils/config');
 const blogRouter = require('./controllers/blogs');
 const userRouter = require('./controllers/user');
 const loginRouter = require('./controllers/login');
+const searchRouter = require('./controllers/search');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 
@@ -33,6 +34,7 @@ app.use(middleware.userExtractor);
 app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/search', searchRouter);
 if (process.env.NODE_ENV === 'test') {
   // eslint-disable-next-line global-require
   const testingRouter = require('./controllers/testing');
