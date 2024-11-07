@@ -58,47 +58,60 @@ const Blog = ({ blog }) => {
       </Row>
       <Row>
         <Col className="text-center">
-          {blog.author.name ? blog.author.name : blog.author.username}
+          <Link to={`/account/${blog.author.username}`}>
+            {blog.author.name ? blog.author.name : blog.author.username}
+          </Link>
         </Col>
       </Row>
 
       <Row className="mt-3 justify-content-md-center">
-        {user.username !== blog.author.username &&
-        <Col xs lg="1" className="text-center">
-          <Link onClick={updateLikes} className="like-button">
-            <FontAwesomeIcon className="pe-2" icon={faHeart} title="Create a New Blog" />
-            <span>{likes}</span>
-          </Link>
-        </Col>
-        }
-        {user.username === blog.author.username &&
+        {user.username !== blog.author.username && (
+          <Col xs lg="1" className="text-center">
+            <Link onClick={updateLikes} className="like-button">
+              <FontAwesomeIcon
+                className="pe-2"
+                icon={faHeart}
+                title="Create a New Blog"
+              />
+              <span>{likes}</span>
+            </Link>
+          </Col>
+        )}
+        {user.username === blog.author.username && (
           <>
-            <Col xs lg="1" className="d-flex justify-content-end align-items-center">
+            <Col
+              xs
+              lg="1"
+              className="d-flex justify-content-end align-items-center"
+            >
               <Link onClick={updateLikes} className="like-button">
-                <FontAwesomeIcon className="pe-2" icon={faHeart} title="Create a New Blog" />
+                <FontAwesomeIcon
+                  className="pe-2"
+                  icon={faHeart}
+                  title="Create a New Blog"
+                />
                 <span>{likes}</span>
               </Link>
             </Col>
             <Col xs lg="1">
-              <Link onClick={async () => {
-                // TODO: alert
-                await dispatch(removeBlog(blog.id))
-                navigate('/')
-              }} className="remove-button">
+              <Link
+                onClick={async () => {
+                  // TODO: alert
+                  await dispatch(removeBlog(blog.id));
+                  navigate("/");
+                }}
+                className="remove-button"
+              >
                 <FontAwesomeIcon icon={faTrashCan} title="Delete this" />
               </Link>
             </Col>
           </>
-        }
+        )}
       </Row>
 
       <Row>
-        <Col className="mt-3 text-center content">
-          {blog.content}
-        </Col>
+        <Col className="mt-3 text-center content">{blog.content}</Col>
       </Row>
-
-
     </Container>
   );
 };

@@ -24,9 +24,9 @@ mongoose.connect(config.MONGODB_URI)
   });
 
 app.use(cors());
-// if (process.env.NODE_ENV === 'development') {
-app.use(express.static(path.join(__dirname, '/dist')));
-// }
+if (process.env.NODE_ENV === "development") {
+  app.use(express.static(path.join(__dirname, "/dist")));
+}
 app.use(express.json());
 app.use(middleware.requestLogger);
 app.use(middleware.userExtractor);

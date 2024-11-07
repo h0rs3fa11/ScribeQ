@@ -1,9 +1,11 @@
 import { Container, Button, Form, Row, Col } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Account = () => {
   const user = useSelector((state) => state.user);
+  const user_name = useParams();
   const [showForm, setShowForm] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -18,6 +20,19 @@ const Account = () => {
     setNewPassword("");
     setShowForm(false);
   };
+
+  if (user.username !== user_name.id) {
+    return (
+      <Container className="d-flex flex-column justify-content-center align-items-center mt-5">
+        <Row className="w-75 justify-content-center">
+          <Col className="text-center mb-4">
+            <h2 className="display-4">Account</h2>
+            <p className="lead">You are viewing {user_name.id} page</p>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
 
   return (
     <Container className="d-flex flex-column justify-content-center align-items-center mt-5">
