@@ -46,13 +46,27 @@ const LoginForm = () => {
           <Form onSubmit={useLogin}>
             <FormGroup>
               {/* <Form.Label>username</Form.Label> */}
-              <Form.Control type="text" id="username" name="username" placeholder="username" />
+              <Form.Control
+                type="text"
+                id="username"
+                name="username"
+                placeholder="username"
+              />
             </FormGroup>
             <FormGroup className="mb-3 mt-3">
               {/* <Form.Label>password</Form.Label> */}
-              <Form.Control type="password" id="password" name="password" placeholder="password"/>
+              <Form.Control
+                type="password"
+                id="password"
+                name="password"
+                placeholder="password"
+              />
             </FormGroup>
-            <Button className="button-spacing me-2" type="submit" id="login-button">
+            <Button
+              className="button-spacing me-2"
+              type="submit"
+              id="login-button"
+            >
               login
             </Button>
             <Button as={Link} to="/register">
@@ -62,12 +76,7 @@ const LoginForm = () => {
           {/* </Togglable> */}
         </Row>
       )}
-      {/* Should redirect to account page */}
-      {curUser.loggedIn && (
-        <div>
-          <p>{curUser.username} logged in</p>
-        </div>
-      )}
+      {curUser.loggedIn && navigate("/account")}
     </Container>
   );
 };
