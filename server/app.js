@@ -15,18 +15,19 @@ const searchRouter = require('./controllers/search');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 
-mongoose.connect(config.MONGODB_URI)
+mongoose
+  .connect(config.MONGODB_URI)
   .then(() => {
-    logger.info('connected to mongodb');
+    logger.info("connected to mongodb");
   })
   .catch((error) => {
-    logger.info('error connecting to mongodb', error.message);
+    console.log(process.env.MONGODB_URI);
+    logger.info("error connecting to mongodb.", error.message);
   });
 
 app.use(cors());
-// if (process.env.NODE_ENV === 'development') {
-app.use(express.static(path.join(__dirname, '/dist')));
-// }
+app.use(express.static(path.join(__dirname, "/dist")));
+
 app.use(express.json());
 app.use(middleware.requestLogger);
 app.use(middleware.userExtractor);
