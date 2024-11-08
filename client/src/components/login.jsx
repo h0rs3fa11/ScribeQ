@@ -7,7 +7,7 @@ import { setCurrentUser } from "../reducers/userReducer";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Form, Button, FormGroup, Row } from "react-bootstrap";
 import { localStorageContext } from "../main";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -15,6 +15,10 @@ const LoginForm = () => {
   const curUser = useSelector((state) => state.user);
   // const notify = useSelector(state => state.notify)
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("<Login> Current user:", curUser);
+  });
 
   const useLogin = async (event) => {
     event.preventDefault();

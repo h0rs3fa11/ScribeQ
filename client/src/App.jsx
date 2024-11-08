@@ -105,12 +105,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
-          <Route
-            path="/account/:id"
-            element={
-              curUser.loggedIn ? <Account /> : <Navigate replace to="/login" />
-            }
-          />
+          <Route path="/account/:id" element={<Account />} />
           <Route path="/blogs" element={<Blogs />} />
           <Route path="/blogs/:id" element={<Blog blog={blog} />} />
           <Route
