@@ -30,6 +30,7 @@ const LoginForm = () => {
       window.localStorage.setItem(localStorageKey, JSON.stringify(user));
       dispatch(setCurrentUser(user));
       blogService.setToken(user.token);
+      console.log("logged in successfully");
       navigate("/");
     } catch (exception) {
       console.log("wrong credentials");
@@ -80,7 +81,7 @@ const LoginForm = () => {
           {/* </Togglable> */}
         </Row>
       )}
-      {curUser.loggedIn && navigate("/account")}
+      {/* {curUser.loggedIn && navigate("/account")} */}
     </Container>
   );
 };

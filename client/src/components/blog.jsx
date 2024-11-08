@@ -8,12 +8,13 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faHeart } from '@fortawesome/free-solid-svg-icons';
+import MiniProfile from "./miniProfile";
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate()
-  const { id } = useParams()
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [likes, setLikes] = useState(0);
   const [content, setContent] = useState(null);
 
@@ -25,8 +26,8 @@ const Blog = ({ blog }) => {
           setContent(resp);
           setLikes(resp.likes);
         } catch (err) {
-          console.error('Error fetching blog:', err);
-          navigate('/');
+          console.error("Error fetching blog:", err);
+          navigate("/");
         }
       } else {
         setLikes(content.likes);
@@ -46,24 +47,19 @@ const Blog = ({ blog }) => {
   };
 
   if (!blog) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
-    <Container className="mt5">
+    <Container className="w-50 mt5">
       <Row className="justify-content-md-center">
         <Col className="text-center">
           <h1 className="title">{blog.title}</h1>
         </Col>
       </Row>
-      <Row>
-        <Col className="text-center">
-          <Link to={`/account/${blog.author.username}`}>
-            {blog.author.name ? blog.author.name : blog.author.username}
-          </Link>
-        </Col>
+      <Row className="justify-content-md-center">
+        <MiniProfile />
       </Row>
-
       <Row className="mt-3 justify-content-md-center">
         {user.username !== blog.author.username && (
           <Col xs lg="1" className="text-center">
@@ -81,7 +77,7 @@ const Blog = ({ blog }) => {
           <>
             <Col
               xs
-              lg="1"
+              lg="2"
               className="d-flex justify-content-end align-items-center"
             >
               <Link onClick={updateLikes} className="like-button">
