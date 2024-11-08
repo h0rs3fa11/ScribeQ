@@ -7,7 +7,7 @@ import { setCurrentUser } from "../reducers/userReducer";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Form, Button, FormGroup, Row } from "react-bootstrap";
 import { localStorageContext } from "../main";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -15,6 +15,10 @@ const LoginForm = () => {
   const curUser = useSelector((state) => state.user);
   // const notify = useSelector(state => state.notify)
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("<Login> Current user:", curUser);
+  });
 
   const useLogin = async (event) => {
     event.preventDefault();
@@ -26,6 +30,7 @@ const LoginForm = () => {
       window.localStorage.setItem(localStorageKey, JSON.stringify(user));
       dispatch(setCurrentUser(user));
       blogService.setToken(user.token);
+      console.log("logged in successfully");
       navigate("/");
     } catch (exception) {
       console.log("wrong credentials");
@@ -46,13 +51,27 @@ const LoginForm = () => {
           <Form onSubmit={useLogin}>
             <FormGroup>
               {/* <Form.Label>username</Form.Label> */}
-              <Form.Control type="text" id="username" name="username" placeholder="username" />
+              <Form.Control
+                type="text"
+                id="username"
+                name="username"
+                placeholder="username"
+              />
             </FormGroup>
             <FormGroup className="mb-3 mt-3">
               {/* <Form.Label>password</Form.Label> */}
-              <Form.Control type="password" id="password" name="password" placeholder="password"/>
+              <Form.Control
+                type="password"
+                id="password"
+                name="password"
+                placeholder="password"
+              />
             </FormGroup>
-            <Button className="button-spacing me-2" type="submit" id="login-button">
+            <Button
+              className="button-spacing me-2"
+              type="submit"
+              id="login-button"
+            >
               login
             </Button>
             <Button as={Link} to="/register">
@@ -62,12 +81,7 @@ const LoginForm = () => {
           {/* </Togglable> */}
         </Row>
       )}
-      {/* Should redirect to account page */}
-      {curUser.loggedIn && (
-        <div>
-          <p>{curUser.username} logged in</p>
-        </div>
-      )}
+      {/* {curUser.loggedIn && navigate("/account")} */}
     </Container>
   );
 };

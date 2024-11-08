@@ -62,25 +62,38 @@ function App() {
       <Container>
         {notify.info && <Alert variant={notify.type}>{notify.info}</Alert>}
         <Navbar collapseOnSelect expand="lg">
-          <Navbar.Brand href="/" id="website-title">ScribeQ</Navbar.Brand>
+          <Navbar.Brand href="/" id="website-title">
+            ScribeQ
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             {curUser.loggedIn && <Search />}
             <Nav className="ms-auto">
-              {curUser.loggedIn ? <div className="icon-dropdown-group">
-                <Link to={`/blogs/${blogId}/edit`} state={{ blogId: blogId }}>
-                  <FontAwesomeIcon className="fa-pen-to-square" icon={faPenToSquare} title="Create a New Blog" />
-                </Link>
-                <Dropdown>
-                  <Dropdown.Toggle id="dropdown-basic">
-                    <FontAwesomeIcon icon={faUser} title="Account" />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/account">Profile</Dropdown.Item>
-                    <Dropdown.Item onClick={useLogout}>Logout</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div> : (
+              {curUser.loggedIn ? (
+                <div className="icon-dropdown-group">
+                  <Link to={`/blogs/${blogId}/edit`} state={{ blogId: blogId }}>
+                    <FontAwesomeIcon
+                      className="fa-pen-to-square"
+                      icon={faPenToSquare}
+                      title="Create a New Blog"
+                    />
+                  </Link>
+                  <Dropdown>
+                    <Dropdown.Toggle id="dropdown-basic">
+                      <FontAwesomeIcon icon={faUser} title="Account" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        as={Link}
+                        to={`/account/${curUser.username}`}
+                      >
+                        Profile
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={useLogout}>Logout</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+              ) : (
                 <Nav.Link as={Link} to="/login">
                   <FontAwesomeIcon icon={faSignIn} title="Sign In" />
                 </Nav.Link>
@@ -92,12 +105,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
-          <Route
-            path="/account"
-            element={
-              curUser.loggedIn ? <Account /> : <Navigate replace to="/login" />
-            }
-          />
+          <Route path="/account/:id" element={<Account />} />
           <Route path="/blogs" element={<Blogs />} />
           <Route path="/blogs/:id" element={<Blog blog={blog} />} />
           <Route
@@ -108,7 +116,7 @@ function App() {
           <Route path="/searchResults" element={<SearchResult />} />
         </Routes>
       </Container>
-    </localStorageContext.Provider >
+    </localStorageContext.Provider>
   );
 }
 

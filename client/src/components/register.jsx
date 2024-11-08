@@ -18,9 +18,9 @@ const RegisterForm = () => {
       console.log(user)
       dispatch(setInfo("Register success!"))
       setTimeout(() => {
-        dispatch(setInfo(""))
+        dispatch(setInfo(""));
         navigate("/login");
-      }, 5000)
+      }, 3000);
     } catch (e) {
       console.log(e)
       dispatch(setError("invalid register info"));

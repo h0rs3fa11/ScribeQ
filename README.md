@@ -12,7 +12,13 @@ cd client/ && npm install && cd ../server && npm install
 
 ## env
 
-Create a `.env` file inside `server/`
+Create a `.env` file inside `server/`, with the following environment variables:
+```
+PORT=XXXX
+TEST_MONGODB_URI=XXX
+MONGODB_URI=PRODUCTION_URL
+SECRET=XXX
+```
 
 ## build
 
