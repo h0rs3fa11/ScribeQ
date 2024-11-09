@@ -7,9 +7,9 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
-const getAll = async () => {
-  console.log(blogURI)
-  const response = await axios.get(blogURI);
+const getAll = async (authorId) => {
+  const url = authorId ? `${blogURI}?author=${authorId}` : blogURI;
+  const response = await axios.get(url);
   return response.data;
 };
 

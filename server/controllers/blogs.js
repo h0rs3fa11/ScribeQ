@@ -5,11 +5,23 @@ const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
 const User = require('../models/user');
 const { generateId } = require('../utils/list_helper');
+const mongoose = require("mongoose");
 
-blogRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+blogRouter.get("/", async (request, response) => {
+  const { author } = request.query;
+  let query = {};
+
+  if (author) {
+    if (!mongoose.Types.ObjectId.isValid(author)) {
+      return response.status(400).json({ error: "Invalid author ID" });
+    }
+
+    query = { author: new mongoose.Types.ObjectId(author) };
+  }
+
+  const blogs = await Blog.find(query)
     .sort({ likes: -1 })
-    .populate('author', { username: 1, name: 1, id: 1 });
+    .populate("author", { username: 1, name: 1, id: 1 });
 
   response.json(blogs);
 });
