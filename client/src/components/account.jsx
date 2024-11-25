@@ -8,9 +8,9 @@ import Blogs from "../components/blogs";
 import blogService from "../services/blog";
 
 const Account = () => {
-  const user = useSelector((state) => state.user);
+  const logged_user = useSelector((state) => state.user);
   const [userBlog, setUserBlog] = useState([]);
-  const user_name = useParams();
+  const user = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,18 +25,18 @@ const Account = () => {
       }
     };
 
-    if (Object.keys(user).length === 0) {
+    if (Object.keys(logged_user).length === 0) {
       return;
     }
 
-    if (!user.loggedIn) {
+    if (!logged_user.loggedIn) {
       navigate("/login");
     } else {
       fetchAccountBlogs();
     }
-  }, [user, navigate]);
+  }, [logged_user, navigate]);
 
-  if (Object.keys(user).length === 0) {
+  if (Object.keys(logged_user).length === 0) {
     return <div>Loading...</div>;
   }
 
@@ -45,7 +45,7 @@ const Account = () => {
       <Row className="justify-content-center">
         <Col md={7}>
           <div className="mb-4">
-            <h1 className="content">{user_name.id}</h1>
+            <h1 className="content">{user.id}</h1>
             <Tab.Container defaultActiveKey="home">
               <Nav variant="tabs">
                 <Nav.Item>
@@ -67,7 +67,7 @@ const Account = () => {
           </div>
         </Col>
         <Col md={3} className="mt-6">
-          <Profile account={user_name} />
+          <Profile account={user} />
           <Followers />
         </Col>
       </Row>

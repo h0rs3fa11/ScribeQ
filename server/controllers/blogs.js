@@ -12,11 +12,11 @@ blogRouter.get("/", async (request, response) => {
   let query = {};
 
   if (author) {
-    if (!mongoose.Types.ObjectId.isValid(author)) {
-      return response.status(400).json({ error: "Invalid author ID" });
+    if (typeof author !== "string") {
+      return response.status(400).json({ error: "Author ID must be a string" });
     }
 
-    query = { author: new mongoose.Types.ObjectId(author) };
+    query = { authorUsername: author };
   }
 
   const blogs = await Blog.find(query)
@@ -26,34 +26,35 @@ blogRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
-blogRouter.get('/:id', async (request, response) => {
+blogRouter.get("/:id", async (request, response) => {
   const blog = await Blog.findById(request.params.id);
   if (blog === null) {
-    response.status(404).json({ error: 'id does not exist' });
+    response.status(404).json({ error: "id does not exist" });
   }
   response.json(blog);
 });
 
-blogRouter.get('/top-likes/:number', async (request, response) => {
+blogRouter.get("/top-likes/:number", async (request, response) => {
   const blogs = await Blog.find({})
     .sort({ like: -1 })
     .limit(request.params.number);
   response.json(blogs);
 });
 
-blogRouter.post('/', async (request, response) => {
+blogRouter.post("/", async (request, response) => {
   const user = request.user;
 
   if (user === undefined) {
-    return response.status(401).json({ error: 'no authorization' });
+    return response.status(401).json({ error: "no authorization" });
   }
 
   const newBlog = Blog({
     title: request.body.title,
     author: user.id,
+    authorUsername: user.username,
     content: request.body.content,
     _id: request.body._id !== undefined ? request.body._id : generateId(),
-    likes: process.env.NODE_ENV === 'test' ? request.body.likes : 0,
+    likes: process.env.NODE_ENV === "test" ? request.body.likes : 0,
   });
 
   const result = await newBlog.save();
